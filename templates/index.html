@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Chat App</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/lib/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/a11y-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+</head>
+
+<body>
+  <div class="chat-icon">
+    <i class="fas fa-comments fa-lg"></i>
+    <div class="chat-container">
+      <div class="container mt-5">
+        <div class="chat-widget">
+          <div class="chat-header">
+            <h1 class="chat-title">Thermomix Copilot</h1>
+            <button class="close-btn">X</button>
+          </div>
+          <div class="chat-box mt-3">
+            <!-- Chat messages will be added here dynamically -->
+          </div>
+          <span class="loading-dots"></span>
+          <div class="form-group mt-3">
+            <textarea class="form-control" rows="3" placeholder="Type your message here" id="message-input"></textarea>
+          </div>
+          <button type="button" class="btn btn-primary" id="send-btn">Send</button>
+          <button type="button" class="btn btn-secondary" id="save-text-btn">Save as Text</button>
+          <button type="button" class="btn btn-thirdly" id="save-pdf-btn">Save as PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    setInterval(highlightAll, 1000);
+    // Function to highlight code using highlight.js library
+    function highlightAll() {
+      document.querySelectorAll("pre code").forEach((block) => {
+        hljs.highlightBlock(block);
+      });
+    }
+const chatIcon = document.querySelector(".chat-icon");
+const chatContainer = document.querySelector(".chat-container");
+const closeButton = document.querySelector(".close-btn");
+
+chatIcon.addEventListener("click", () => {
+  chatContainer.classList.toggle("show-chat");
+  chatIcon.classList.toggle("active"); // add or remove the "active" class
+});
+
+closeButton.addEventListener("click", () => {
+  chatContainer.classList.remove("show-chat");
+  chatIcon.classList.remove("active"); // remove the "active" class
+});
+
+chatContainer.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+    function myFunction() {
+      chatContainer.style.display = chatContainer.style.display === "block" ? "none" : "block";
+    }
+    const chatBox = document.querySelector(".chat-box");
+    const messageInput = document.querySelector("#message-input");
+    const sendBtn = document.querySelector("#send-btn");
+
+    function addMessage(message, isUserMessage) {
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add("mt-3", "p-3", "rounded");
+
+      if (isUserMessage) {
+        messageDiv.classList.add("user-message");
+
+      } else {
+        messageDiv.classList.add("bot-message");
+      }
+
+      messageDiv.innerHTML = `
+        <img src="{{ url_for('static', filename='images/user.png') }}" class="user-icon"><p>${message}</p>
+        `;
+
+      chatBox.appendChild(messageDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function downloadTextFile(text, filename) {
+      const element = document.createElement("a");
+      element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
+      element.setAttribute("download", filename);
+      element.style.display = "none";
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+    
+    const saveTextBtn = document.querySelector("#save-text-btn");
+    saveTextBtn.addEventListener("click", () => {
+      const chatHistory = chatBox.innerText.trim();
+      downloadTextFile(chatHistory, "chat_history.txt");
+    });
+    
+    function downloadPdfFile(text, filename) {
+      var doc = new jsPDF();
+      doc.text(text, 1,1);
+      doc.save(filename);
+    }
+    
+    const savePdfBtn = document.querySelector("#save-pdf-btn");
+    savePdfBtn.addEventListener("click", () => {
+      const chatHistory = chatBox.innerText.trim();
+      downloadPdfFile(chatHistory, "chat_history.pdf");
+    });
+    
+    function sendMessage() {
+      const message = messageInput.value.trim();
+
+      if (message !== "") {
+        addMessage(message, true);
+        messageInput.value = "";
+        messageInput.focus();
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+
+        const loadingIndicator = document.createElement("span");
+        loadingIndicator.classList.add("loading-indicator");
+
+        const loadingDots = document.createElement("span");
+        loadingDots.classList.add("loading-dots");
+
+        loadingIndicator.appendChild(loadingDots);
+        loadingIndicator.appendChild(document.createTextNode("Waiting for response..."));
+
+        chatBox.appendChild(loadingIndicator);
+    
+
+        fetch("/api", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ message })
+        })
+          .then(response => response.json())
+          .then(data => {
+            chatBox.removeChild(loadingIndicator);
+            const messageDiv = document.createElement("div");
+            messageDiv.classList.add("mt-3", "p-3", "rounded", "bot-message");
+            
+           
+            const content = data.content;
+            
+            // Check if the content has code block
+            const hasCodeBlock = content.includes("```");
+            if (hasCodeBlock) {
+              // If the content has code block, wrap it in a <pre><code> element
+              const codeContent = content.replace(/```([\s\S]+?)```/g, '</p><pre><code>$1</code></pre><p>');
+
+             
+              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/gpt.jpg') }}" class="bot-icon"><p>${codeContent}</p>`
+             
+            }
+            else{
+              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/gpt.jpg') }}" class="bot-icon"><p>${content}</p>`
+            }
+            chatBox.appendChild(messageDiv);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+          })
+          .catch(error => console.error(error));
+      }
+    }
+
+
+    sendBtn.addEventListener("click", sendMessage);
+    messageInput.addEventListener("keydown", event => {
+      if (event.keyCode === 13 && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+
+</html>
