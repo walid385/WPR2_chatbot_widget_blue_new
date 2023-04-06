@@ -6,15 +6,62 @@
 --secondary-color: #648f42;
 --user-color: #b1e97c;
 }
+html {
+font-size: 62.5%;
+}
 
 body {
 font-family: 'Roboto', sans-serif;
 font-size: 16px;
 line-height: 1.4;
-background-color: #000000; /* Use a light background color */
+background-color: #ffffff; /* Use a light background color */
 margin: 0;
 padding: 0;
 }
+
+.header {
+  display: flex;
+  align-items: top;
+}
+
+.logo img{
+  margin: 10px;
+  width: 150px;
+  height: 150px;
+  margin-left: 80px;
+}
+
+.nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  margin-right: 80px;
+}
+
+.nav ul li {
+  margin: 0 10px;
+}
+
+.nav ul li a {
+  display: block;
+  color: #000000;
+  text-decoration: none;
+  padding: 10px;
+  font-size: 1.5rem;
+}
+
+.nav ul li a:hover,
+.nav ul li a.active {
+  color: #ffffff;
+  background-color: #35826f;
+}
+
+.nav ul li a.active:hover {
+  color: #ffffff;
+  background-color: #35826f;
+}
+
 
 .chat-box {
 height: 300px;
@@ -304,3 +351,4 @@ margin-bottom: 10px;
   opacity: 0.2;
   }
   }
+
