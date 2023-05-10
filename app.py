@@ -1,12 +1,10 @@
 from flask import Flask, render_template, request
 import openai
 
-
-
+# Create a Flask app
 app = Flask(__name__)
 
 # Set up OpenAI API credentials
-
 openai.api_key = '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'
 
 

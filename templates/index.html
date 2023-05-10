@@ -26,25 +26,31 @@
         <a href="#" class="logo">
           <img src="/static/images/logo.svg" alt="Logo" class="logo-therm">
         </a>
-    </div>
-    <div class="navigation">
-      <nav class="nav">
-        <ul class="nav-list">
-          <li class="nav-item">
-            <a href="#" class="nav-link">Home</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">About</a>
-          </li>
-          <li class="nav-item">
-            <a href="#" class="nav-link">Contact</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+      </div>
+      <div class="navigation">
+        <nav class="nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <a href="#" class="nav-link">Home</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">About</a>
+            </li>
+            <li class="nav-item">
+              <a href="#" class="nav-link">Contact</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
   </div>
-  <div class="hero"></div>
+  <div class="hero">
+    <div class="hero-content">
+      <h1>Discover the Vorwerk Difference</h1>
+      <p>Our innovative products and services make everyday life easier and more enjoyable.</p>
+      <button class="btn btn-hero">Shop Now</button>
+    </div>
+  </div>
   <div class="chat-icon">
     <i class="fas fa-comments fa-lg"></i>
     <div class="chat-container">
@@ -57,17 +63,24 @@
           <div class="chat-box mt-3">
             <!-- Chat messages will be added here dynamically -->
           </div>
-          <span class="loading-dots"></span>
           <div class="form-group mt-3">
             <textarea class="form-control" rows="3" placeholder="Type your message here" id="message-input"></textarea>
-          </div>
-          <button type="button" class="btn btn-primary" id="send-btn">Send</button>
-          <button type="button" class="btn btn-secondary" id="save-text-btn">Save as Text</button>
-          <button type="button" class="btn btn-thirdly" id="save-pdf-btn">Save as PDF</button>
+            <div class="button-group">
+              <div class="send-btn-group">
+                <button type="button" class="btn btn-primary" id="send-btn">Send</button>
+              </div>
+              <div class="secondary-buttons">
+                <button type="button" class="btn btn-secondary" id="save-text-btn">Save as Text</button>
+                <button type="button" class="btn btn-thirdly" id="save-pdf-btn">Save as PDF</button>
+              </div>
+            </div>
+          </div>          
         </div>
       </div>
     </div>
   </div>
+  
+  
 
   <script>
     setInterval(highlightAll, 1000);
@@ -114,7 +127,7 @@ chatContainer.addEventListener("click", (event) => {
       }
 
       messageDiv.innerHTML = `
-        <img src="{{ url_for('static', filename='images/user.png') }}" class="user-icon"><p>${message}</p>
+        <img src="{{ url_for('static', filename='images/chatbot.png') }}" class="user-icon"><p>${message}</p>
         `;
 
       chatBox.appendChild(messageDiv);
@@ -194,11 +207,11 @@ chatContainer.addEventListener("click", (event) => {
               const codeContent = content.replace(/```([\s\S]+?)```/g, '</p><pre><code>$1</code></pre><p>');
 
              
-              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/gpt.jpg') }}" class="bot-icon"><p>${codeContent}</p>`
+              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/bot.jpg') }}" class="bot-icon"><p>${codeContent}</p>`
              
             }
             else{
-              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/gpt.jpg') }}" class="bot-icon"><p>${content}</p>`
+              messageDiv.innerHTML = `<img src="{{ url_for('static', filename='images/bot.jpg') }}" class="bot-icon"><p>${content}</p>`
             }
             chatBox.appendChild(messageDiv);
             chatBox.scrollTop = chatBox.scrollHeight;
