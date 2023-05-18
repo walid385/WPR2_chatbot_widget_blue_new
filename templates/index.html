@@ -72,6 +72,9 @@
               <div class="secondary-buttons">
                 <button type="button" class="btn btn-secondary" id="save-text-btn">Save as Text</button>
                 <button type="button" class="btn btn-thirdly" id="save-pdf-btn">Save as PDF</button>
+                <button class="mic-icon">
+                  <i class="fas fa-microphone"></i>
+                </button>
               </div>
             </div>
           </div>          
@@ -90,23 +93,35 @@
         hljs.highlightBlock(block);
       });
     }
-const chatIcon = document.querySelector(".chat-icon");
-const chatContainer = document.querySelector(".chat-container");
-const closeButton = document.querySelector(".close-btn");
-
-chatIcon.addEventListener("click", () => {
-  chatContainer.classList.toggle("show-chat");
-  chatIcon.classList.toggle("active"); // add or remove the "active" class
-});
-
-closeButton.addEventListener("click", () => {
-  chatContainer.classList.remove("show-chat");
-  chatIcon.classList.remove("active"); // remove the "active" class
-});
-
-chatContainer.addEventListener("click", (event) => {
-  event.stopPropagation();
-});
+    const chatIcon = document.querySelector(".chat-icon");
+    const chatContainer = document.querySelector(".chat-container");
+    const closeButton = document.querySelector(".close-btn");
+    const micIcon = document.querySelector(".mic-icon");
+    
+    chatIcon.addEventListener("click", () => {
+      chatContainer.classList.toggle("show-chat");
+      this.classList.toggle("active");
+    });
+    
+    closeButton.addEventListener("click", () => {
+      chatContainer.classList.remove("show-chat");
+      chatIcon.classList.remove("active"); // remove the "active" class
+    });
+    
+    micIcon.addEventListener("click", function(event) {
+      this.classList.toggle("active");
+    });
+    
+    
+    closeButton.addEventListener("click", () => {
+      chatContainer.classList.remove("show-chat");
+      chatIcon.classList.remove("active"); // remove the "active" class
+      micIcon.classList.remove("active"); // remove the "active" class from the mic icon
+    });
+    
+    chatContainer.addEventListener("click", (event) => {
+      event.stopPropagation();
+    });
 
     function myFunction() {
       chatContainer.style.display = chatContainer.style.display === "block" ? "none" : "block";
