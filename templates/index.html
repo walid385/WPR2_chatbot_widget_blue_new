@@ -98,10 +98,11 @@
     const closeButton = document.querySelector(".close-btn");
     const micIcon = document.querySelector(".mic-icon");
     
-    chatIcon.addEventListener("click", () => {
+    chatIcon.addEventListener("click", function() {
       chatContainer.classList.toggle("show-chat");
-      this.classList.toggle("active");
+      this.querySelector('i').classList.toggle("active");
     });
+    
     
     closeButton.addEventListener("click", () => {
       chatContainer.classList.remove("show-chat");

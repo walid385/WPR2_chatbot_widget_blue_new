@@ -165,7 +165,7 @@ body {
   box-shadow: 0 2px 10px rgba(0, 0, 2, 3.5);
 }
 
-.chat-icon.active i {
+.chat-icon.active {
   animation: chat-icon-pulse 0.5s infinite;
 }
 
@@ -249,7 +249,8 @@ body {
   flex: 1;
   margin-bottom: 16px;
   overflow-y: auto;
-  height: 300px; /* adjust height as needed */
+  overflow-x: auto;
+  height: 290px; /* adjust height as needed */
 }
 
 .user-message {
